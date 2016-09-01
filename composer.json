@@ -1,0 +1,30 @@
+{
+  "name": "lx1036/myflysystem",
+  "version": "0.0.1",
+  "description": "Filesystem abstraction, but easy.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "lx1036",
+      "email": "lx1036@126.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "RightCapital\\Flysystem\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RightCapital\\Flysystem\\Test\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "mockery/mockery": "^0.9.5",
+    "phpunit/phpunit": "^5.5"
+  },
+  "require": {
+    "aws/aws-sdk-php": "^3.19",
+    "predis/predis": "^1.1"
+  }
+}
