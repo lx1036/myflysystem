@@ -6,24 +6,21 @@
  * Time: 12:33 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\FlySystem\Exception;
 
-class FileExistsException extends \LogicException
+class FileNotFoundException extends \LogicException
 {
-    /**
-     * @var string
-     */
     private $path;
 
     /**
-     * FileExistsException constructor.
+     * FileNotFoundException constructor.
      *
      * @param $path
      */
     public function __construct($path, $code = 0, \Exception $previous = null)
     {
         $this->path = $path;
-        parent::__construct('File already exists at path: ' . $path, $code, $previous);
+        parent::__construct('File not found at path: ' . $path, $code, $previous);
     }
 
     public function getPath()

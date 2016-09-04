@@ -8,8 +8,12 @@
 
 namespace RightCapital\FlySystem\FlySystem;
 
-class Filesystem
+use RightCapital\FlySystem\FlySystem\Config\ConfigAwareTrait;
+use RightCapital\FlySystem\FlySystem\Plugin\PluggableTrait;
+
+class Filesystem implements FilesystemInterface
 {
+    use PluggableTrait, ConfigAwareTrait;
     /**
      * @var \RightCapital\FlySystem\FlySystem\AdapterInterface
      */
@@ -199,5 +203,75 @@ class Filesystem
         if ($this->has($path)) {
             throw new FileExistsException($path);
         }
+    }
+
+    public function readStream($path)
+    {
+        // TODO: Implement readStream() method.
+    }
+
+    public function getSize($path)
+    {
+        // TODO: Implement getSize() method.
+    }
+
+    public function getTimestamp($path)
+    {
+        // TODO: Implement getTimestamp() method.
+    }
+
+    public function getVisibility($path)
+    {
+        // TODO: Implement getVisibility() method.
+    }
+
+    public function writeStream($path, $resource, array $config = [])
+    {
+        // TODO: Implement writeStream() method.
+    }
+
+    public function updateStream($path, $resource, array $config = [])
+    {
+        // TODO: Implement updateStream() method.
+    }
+
+    public function copy($path, $newpath)
+    {
+        // TODO: Implement copy() method.
+    }
+
+    public function createDir($dirname, array $config = [])
+    {
+        // TODO: Implement createDir() method.
+    }
+
+    public function setVisibility($path, $visibility)
+    {
+        // TODO: Implement setVisibility() method.
+    }
+
+    public function put($path, $contents, array $config = [])
+    {
+        // TODO: Implement put() method.
+    }
+
+    public function putStream($path, $resource, array $config = [])
+    {
+        // TODO: Implement putStream() method.
+    }
+
+    public function readAndDelete($path)
+    {
+        // TODO: Implement readAndDelete() method.
+    }
+
+    public function get($path, Handler $handler = null)
+    {
+        // TODO: Implement get() method.
+    }
+
+    public function addPlugin(PluginInterface $plugin)
+    {
+        // TODO: Implement addPlugin() method.
     }
 }
