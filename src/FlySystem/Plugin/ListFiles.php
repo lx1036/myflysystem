@@ -1,6 +1,6 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Plugin;
+namespace RightCapital\FlySystem\Plugin;
 
 class ListFiles extends AbstractPlugin
 {

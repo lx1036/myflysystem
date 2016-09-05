@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 1:04 PM
- */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\Support;
 
-use RightCapital\FlySystem\FlySystem\Config\Config;
+use RightCapital\FlySystem\Config\Config;
 
 class Util
 {
@@ -44,6 +38,13 @@ class Util
         return $result;
     }
 
+    /**
+     * Ensure the input should be Config::class
+     * 
+     * @param $config
+     *
+     * @return \RightCapital\FlySystem\Config\Config
+     */
     public static function ensureConfig($config)
     {
         if ($config === null) {

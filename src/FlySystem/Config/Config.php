@@ -6,7 +6,7 @@
  * Time: 11:03 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Config;
+namespace RightCapital\FlySystem\Config;
 
 class Config
 {
@@ -27,13 +27,28 @@ class Config
     /**
      * Set the fallback.
      *
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config $fallback
+     * @param \RightCapital\FlySystem\Config\Config $fallback
      *
      * @return $this
      */
     public function setFallback(Config $fallback)
     {
         $this->fallback = $fallback;
+
+        return $this;
+    }
+
+    /**
+     * Set a setting.
+     *
+     * @param $key
+     * @param $value
+     *
+     * @return $this
+     */
+    public function set($key, $value)
+    {
+        $this->settings[$key] = $value;
 
         return $this;
     }

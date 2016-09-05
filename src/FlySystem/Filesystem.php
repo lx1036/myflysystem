@@ -1,29 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 11:51 AM
- */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
 use InvalidArgumentException;
-use RightCapital\FlySystem\FlySystem\Config\ConfigAwareTrait;
-use RightCapital\FlySystem\FlySystem\Exception\FileExistsException;
-use RightCapital\FlySystem\FlySystem\Exception\FileNotFoundException;
-use RightCapital\FlySystem\FlySystem\Exception\RootViolationException;
-use RightCapital\FlySystem\FlySystem\Handler\Directory;
-use RightCapital\FlySystem\FlySystem\Handler\File;
-use RightCapital\FlySystem\FlySystem\Handler\Handler;
-use RightCapital\FlySystem\FlySystem\Plugin\PluggableTrait;
-use RightCapital\FlySystem\FlySystem\Support\ContentListingFormatter;
+use RightCapital\FlySystem\Adapter\AdapterInterface;
+use RightCapital\FlySystem\Config\ConfigAwareTrait;
+use RightCapital\FlySystem\Exception\FileExistsException;
+use RightCapital\FlySystem\Exception\FileNotFoundException;
+use RightCapital\FlySystem\Exception\RootViolationException;
+use RightCapital\FlySystem\Handler\Directory;
+use RightCapital\FlySystem\Handler\File;
+use RightCapital\FlySystem\Handler\Handler;
+use RightCapital\FlySystem\Plugin\PluggableTrait;
+use RightCapital\FlySystem\Support\ContentListingFormatter;
+use RightCapital\FlySystem\Support\Util;
 
 class Filesystem implements FilesystemInterface
 {
     use PluggableTrait, ConfigAwareTrait;
     /**
-     * @var \RightCapital\FlySystem\FlySystem\AdapterInterface
+     * @var \RightCapital\FlySystem\Adapter\AdapterInterface
      */
     private $adapter;
 
@@ -34,11 +30,19 @@ class Filesystem implements FilesystemInterface
     }
 
     /**
+     * @return \RightCapital\FlySystem\Adapter\AdapterInterface
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
      * Check wether a path exists
      *
      * @param string $path path to check
      *
-     * @return bool wether the path exists
+     * @return bool whether the path exists
      */
     public function has($path): bool
     {
@@ -48,13 +52,14 @@ class Filesystem implements FilesystemInterface
     }
 
     /**
-     * @return \RightCapital\FlySystem\FlySystem\AdapterInterface
+     * Write a file.
+     *
+     * @param string $path
+     * @param string $contents
+     * @param array  $config
+     *
+     * @return bool
      */
-    public function getAdapter()
-    {
-        return $this->adapter;
-    }
-
     public function write($path, $contents, array $config = []):bool
     {
         $path = Util::normalizePath($path);
@@ -64,6 +69,21 @@ class Filesystem implements FilesystemInterface
         return (bool) $this->getAdapter()->write($path, $contents, $config);
     }
 
+    public function writeStream($path, $resource, array $config = [])
+    {
+        if (!is_resource($resource)) {
+            throw new InvalidArgumentException(__METHOD__ . ' expects argument #2 to be a valid resource.');
+        }
+
+        $path = Util::normalizePath($path);
+        $this->assertAbsent($path);
+        $config = $this->prepareConfig($config);
+
+        Util::rewindStream($resource);
+
+        return (bool) $this->getAdapter()->writeStream($path, $resource, $config);
+    }
+
     public function update($path, $contents, array $config = [])
     {
         $path   = Util::normalizePath($path);
@@ -71,6 +91,69 @@ class Filesystem implements FilesystemInterface
         $this->assertPresent($path);
 
         return (bool) $this->getAdapter()->update($path, $contents, $config);
+    }
+
+    public function updateStream($path, $resource, array $config = [])
+    {
+        if (!is_resource($resource)) {
+            throw new InvalidArgumentException(__METHOD__ . ' expects argument #2 to be a valid resource.');
+        }
+
+        $path   = Util::normalizePath($path);
+        $config = $this->prepareConfig($config);
+        $this->assertPresent($path);
+        Util::rewindStream($resource);
+
+        return (bool) $this->getAdapter()->updateStream($path, $resource, $config);
+    }
+
+    /**
+     * Create a file or update if exists.
+     *
+     * @param string $path     The path to the file.
+     * @param string $contents The file contents.
+     * @param array  $config   An optional configuration array.
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function put($path, $contents, array $config = [])
+    {
+        $path   = Util::normalizePath($path);
+        $config = $this->prepareConfig($config);
+
+        if ($this->has($path)) {
+            return (bool) $this->getAdapter()->update($path, $contents, $config);
+        }
+
+        return (bool) $this->getAdapter()->write($path, $contents, $config);
+    }
+
+    /**
+     * Create a file or update if exists.
+     *
+     * @param string   $path     The path to the file.
+     * @param resource $resource The file handle.
+     * @param array    $config   An optional configuration array.
+     *
+     * @throws \InvalidArgumentException Thrown if $resource is not a resource.
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function putStream($path, $resource, array $config = [])
+    {
+        if (!is_resource($resource)) {
+            throw new InvalidArgumentException(__METHOD__ . ' expects argument #2 to be a valid resource.');
+        }
+
+        $path   = Util::normalizePath($path);
+        $config = $this->prepareConfig($config);
+        Util::rewindStream($resource);
+
+        if ($this->has($path)) {
+            return (bool) $this->getAdapter()->updateStream($path, $resource, $config);
+        }
+
+        return (bool) $this->getAdapter()->writeStream($path, $resource, $config);
     }
 
     public function read($path)
@@ -193,7 +276,7 @@ class Filesystem implements FilesystemInterface
         $path = Util::normalizePath($path);
         $this->assertPresent($path);
 
-        if ( ! $object = $this->getAdapter()->readStream($path)) {
+        if (!$object = $this->getAdapter()->readStream($path)) {
             return false;
         }
 
@@ -204,7 +287,7 @@ class Filesystem implements FilesystemInterface
     {
         $path = Util::normalizePath($path);
 
-        if (($object = $this->getAdapter()->getSize($path)) === false || ! isset($object['size'])) {
+        if (($object = $this->getAdapter()->getSize($path)) === false || !isset($object['size'])) {
             return false;
         }
 
@@ -216,7 +299,7 @@ class Filesystem implements FilesystemInterface
         $path = Util::normalizePath($path);
         $this->assertPresent($path);
 
-        if ( ! $object = $this->getAdapter()->getTimestamp($path)) {
+        if (!$object = $this->getAdapter()->getTimestamp($path)) {
             return false;
         }
 
@@ -235,69 +318,11 @@ class Filesystem implements FilesystemInterface
         return $object['visibility'];
     }
 
-    public function writeStream($path, $resource, array $config = [])
-    {
-        if ( ! is_resource($resource)) {
-            throw new InvalidArgumentException(__METHOD__ . ' expects argument #2 to be a valid resource.');
-        }
-
-        $path = Util::normalizePath($path);
-        $this->assertAbsent($path);
-        $config = $this->prepareConfig($config);
-
-        Util::rewindStream($resource);
-
-        return (bool) $this->getAdapter()->writeStream($path, $resource, $config);
-    }
-
-    public function updateStream($path, $resource, array $config = [])
-    {
-        // TODO: Implement updateStream() method.
-    }
-
     public function setVisibility($path, $visibility)
     {
         $path = Util::normalizePath($path);
 
         return (bool) $this->getAdapter()->setVisibility($path, $visibility);
-    }
-
-    /**
-     * Update or write a file.
-     *
-     * @param string $path
-     * @param string $contents
-     * @param array  $config
-     *
-     * @return bool
-     */
-    public function put($path, $contents, array $config = [])
-    {
-        $path = Util::normalizePath($path);
-        $config = $this->prepareConfig($config);
-
-        if ($this->has($path)) {
-            return (bool) $this->getAdapter()->update($path, $contents, $config);
-        }
-
-        return (bool) $this->getAdapter()->write($path, $contents, $config);
-    }
-
-    public function putStream($path, $resource, array $config = [])
-    {
-        if (!is_resource($resource)) {
-            throw new InvalidArgumentException(__METHOD__ . ' expects argument #2 to be a valid resource.');
-        }
-
-        $path = Util::normalizePath($path);
-        $config = $this->prepareConfig($config);
-        Util::rewindStream($resource);
-
-        if ($this->has($path)) {
-            return (bool) $this->getAdapter()->updateStream($path, $resource, $config);
-        }
-
-        return (bool) $this->getAdapter()->writeStream($path, $resource, $config);
     }
 
     public function readAndDelete($path)
@@ -321,7 +346,7 @@ class Filesystem implements FilesystemInterface
 
         if (empty($handler)) {
             $metadata = $this->getMetadata($path);
-            $handler = $metadata['type'] === 'file' ? new File($this, $path) : new Directory($this, $path);
+            $handler  = $metadata['type'] === 'file' ? new File($this, $path) : new Directory($this, $path);
         }
 
         $handler->setPath($path);

@@ -6,7 +6,7 @@
  * Time: 9:54 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Adapter;
+namespace RightCapital\FlySystem\Adapter;
 
 class NullAdapter extends AbstractAdapter
 {

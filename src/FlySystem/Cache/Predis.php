@@ -6,7 +6,7 @@
  * Time: 12:52 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Cache;
+namespace RightCapital\FlySystem\Cache;
 
 class Predis extends Memory
 {

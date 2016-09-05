@@ -1,13 +1,13 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Handler;
+namespace RightCapital\FlySystem\Handler;
 
-use RightCapital\FlySystem\FlySystem\Filesystem;
+use RightCapital\FlySystem\Filesystem;
 
 abstract class Handler
 {
     /**
-     * @var \RightCapital\FlySystem\FlySystem\Filesystem
+     * @var \RightCapital\FlySystem\Filesystem
      */
     private $filesystem;
     /**
@@ -18,7 +18,7 @@ abstract class Handler
     /**
      * Handler constructor.
      *
-     * @param \RightCapital\FlySystem\FlySystem\Filesystem $fileSystem
+     * @param \RightCapital\FlySystem\Filesystem $fileSystem
      * @param string                                       $path
      */
     public function __construct(Filesystem $fileSystem, string $path)
@@ -61,7 +61,7 @@ abstract class Handler
     }
 
     /**
-     * @return \RightCapital\FlySystem\FlySystem\Filesystem
+     * @return \RightCapital\FlySystem\Filesystem
      */
     public function getFilesystem(): Filesystem
     {
@@ -69,7 +69,7 @@ abstract class Handler
     }
 
     /**
-     * @param \RightCapital\FlySystem\FlySystem\Filesystem $filesystem
+     * @param \RightCapital\FlySystem\Filesystem $filesystem
      */
     public function setFilesystem(Filesystem $filesystem)
     {

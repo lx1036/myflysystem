@@ -1,6 +1,6 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
 use finfo;
 

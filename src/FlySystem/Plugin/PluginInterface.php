@@ -6,16 +6,16 @@
  * Time: 11:20 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Plugin;
+namespace RightCapital\FlySystem\Plugin;
 
-use RightCapital\FlySystem\FlySystem\FilesystemInterface;
+use RightCapital\FlySystem\FilesystemInterface;
 
 interface PluginInterface
 {
     /**
      * Set the filesystem object.
      *
-     * @param \RightCapital\FlySystem\FlySystem\FilesystemInterface $filesystem
+     * @param \RightCapital\FlySystem\FilesystemInterface $filesystem
      *
      */
     public function setFilesystem(FilesystemInterface $filesystem);

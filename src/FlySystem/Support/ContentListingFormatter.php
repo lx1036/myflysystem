@@ -1,6 +1,6 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Support;
+namespace RightCapital\FlySystem\Support;
 
 class ContentListingFormatter
 {

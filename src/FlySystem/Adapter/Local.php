@@ -1,22 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 1:40 PM
- */
 
-namespace RightCapital\FlySystem\FlySystem\Adapter;
+namespace RightCapital\FlySystem\Adapter;
 
 use finfo;
 use RecursiveIteratorIterator;
-use RightCapital\FlySystem\FlySystem\AdapterInterface;
-use RightCapital\FlySystem\FlySystem\Config\Config;
-use RightCapital\FlySystem\FlySystem\Exception\NotSupportedException;
-use RightCapital\FlySystem\FlySystem\Exception\UnreadableFileException;
-use RightCapital\FlySystem\FlySystem\FilesystemInterface;
-use RightCapital\FlySystem\FlySystem\MimeType;
-use RightCapital\FlySystem\FlySystem\Util;
+use RightCapital\FlySystem\Config\Config;
+use RightCapital\FlySystem\Exception\NotSupportedException;
+use RightCapital\FlySystem\Exception\UnreadableFileException;
+use RightCapital\FlySystem\MimeType;
+use RightCapital\FlySystem\Support\Util;
 use SplFileInfo;
 
 class Local extends AbstractAdapter
@@ -332,7 +324,7 @@ class Local extends AbstractAdapter
     /**
      * @param \SplFileInfo $file
      *
-     * @throws \RightCapital\FlySystem\FlySystem\Exception\UnreadableFileException
+     * @throws \RightCapital\FlySystem\Exception\UnreadableFileException
      */
     private function guardAgainstUnreadableFileInfo(SplFileInfo $file)
     {
@@ -363,7 +355,7 @@ class Local extends AbstractAdapter
      *
      * @param                                                 $path
      * @param                                                 $resource
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
+     * @param \RightCapital\FlySystem\Config\Config $config
      *
      * @return array|false
      */
@@ -413,7 +405,7 @@ class Local extends AbstractAdapter
     /**
      * Read a file as a stream.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|false
      */
@@ -428,7 +420,7 @@ class Local extends AbstractAdapter
     /**
      * Get the visibility of a file.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|false
      */

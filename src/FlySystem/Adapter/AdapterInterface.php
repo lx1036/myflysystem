@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 11:46 AM
- */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\Adapter;
 
-use RightCapital\FlySystem\FlySystem\Config\Config;
+use RightCapital\FlySystem\Config\Config;
+use RightCapital\FlySystem\ReadInterface;
 
 interface AdapterInterface extends ReadInterface
 {
@@ -27,7 +22,7 @@ interface AdapterInterface extends ReadInterface
      *
      * @param                                                 $path
      * @param                                                 $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
+     * @param \RightCapital\FlySystem\Config\Config           $config
      *
      * @return array|false
      */
@@ -38,7 +33,7 @@ interface AdapterInterface extends ReadInterface
      *
      * @param                                                                                          $path
      * @param                                                                                          $resource
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config                                          $config
+     * @param \RightCapital\FlySystem\Config\Config                                                    $config
      *
      * @return array|false
      */
@@ -49,7 +44,7 @@ interface AdapterInterface extends ReadInterface
      *
      * @param                                                 $path
      * @param                                                 $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
+     * @param \RightCapital\FlySystem\Config\Config           $config
      *
      * @return array|false
      */
@@ -60,7 +55,7 @@ interface AdapterInterface extends ReadInterface
      *
      * @param                                                 $path
      * @param                                                 $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
+     * @param \RightCapital\FlySystem\Config\Config           $config
      *
      * @return array|false
      */
@@ -107,8 +102,8 @@ interface AdapterInterface extends ReadInterface
     /**
      * Create a directory.
      *
-     * @param                                          $dirname
-     * @param \RightCapital\FlySystem\FlySystem\Config $config
+     * @param string                                $dirname
+     * @param \RightCapital\FlySystem\Config\Config $config
      *
      * @return array|false
      */

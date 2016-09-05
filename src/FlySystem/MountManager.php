@@ -1,9 +1,9 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
-use RightCapital\FlySystem\FlySystem\Plugin\PluggableTrait;
-use RightCapital\FlySystem\FlySystem\Plugin\PluginNotFoundException;
+use RightCapital\FlySystem\Plugin\PluggableTrait;
+use RightCapital\FlySystem\Plugin\PluginNotFoundException;
 
 class MountManager
 {
@@ -39,7 +39,7 @@ class MountManager
      * Mount filesystem
      *
      * @param                                                       $prefix
-     * @param \RightCapital\FlySystem\FlySystem\FilesystemInterface $filesystem
+     * @param \RightCapital\FlySystem\FilesystemInterface $filesystem
      *
      * @return $this
      */

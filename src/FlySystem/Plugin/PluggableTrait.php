@@ -1,8 +1,8 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Plugin;
+namespace RightCapital\FlySystem\Plugin;
 
-use RightCapital\FlySystem\FlySystem\FilesystemInterface;
+use RightCapital\FlySystem\FilesystemInterface;
 
 trait PluggableTrait
 {

@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 1:40 PM
- */
 
-namespace RightCapital\FlySystem\FlySystem\Adapter;
+namespace RightCapital\FlySystem\Adapter;
 
 use Aws\S3\S3Client;
-use RightCapital\FlySystem\FlySystem\Util;
+use RightCapital\FlySystem\Config\Config;
+use RightCapital\FlySystem\Support\Util;
 
 class AwsS3 extends AbstractAdapter
 {
@@ -162,5 +157,121 @@ class AwsS3 extends AbstractAdapter
         }
 
         return $this->prefix . '/' . $path;
+    }
+
+    /**
+     * Write a new file using stream.
+     *
+     * @param                                                                                          $path
+     * @param                                                                                          $resource
+     * @param \RightCapital\FlySystem\Config\Config                                                    $config
+     *
+     * @return array|false
+     */
+    public function writeStream($path, $resource, Config $config)
+    {
+        // TODO: Implement writeStream() method.
+    }
+
+    /**
+     * Update a file using stream.
+     *
+     * @param                                                 $path
+     * @param                                                 $contents
+     * @param \RightCapital\FlySystem\Config\Config           $config
+     *
+     * @return array|false
+     */
+    public function updateStream($path, $contents, Config $config)
+    {
+        // TODO: Implement updateStream() method.
+    }
+
+    /**
+     * Copy a file.
+     *
+     * @param string $path
+     * @param string $newpath
+     *
+     * @return bool
+     */
+    public function copy($path, $newpath)
+    {
+        // TODO: Implement copy() method.
+    }
+
+    /**
+     * Set the visibility for a file.
+     *
+     * @param string $path
+     * @param string $visibility
+     *
+     * @return array|false
+     */
+    public function setVisibility($path, $visibility)
+    {
+        // TODO: Implement setVisibility() method.
+    }
+
+    /**
+     * Read a file as a stream.
+     *
+     * @param \RightCapital\FlySystem\string $path
+     *
+     * @return array|false
+     */
+    public function readStream($path)
+    {
+        // TODO: Implement readStream() method.
+    }
+
+    /**
+     * Get the file size.
+     *
+     * @param string $path
+     *
+     * @return int
+     */
+    public function getSize($path)
+    {
+        // TODO: Implement getSize() method.
+    }
+
+    /**
+     * Get the timestamp of a file.
+     *
+     * @param \RightCapital\FlySystem\string $path
+     *
+     * @return mixed
+     */
+    public function getTimestamp($path)
+    {
+        // TODO: Implement getTimestamp() method.
+    }
+
+    /**
+     * Get the visibility of a file.
+     *
+     * @param \RightCapital\FlySystem\string $path
+     *
+     * @return array|false
+     */
+    public function getVisibility($path)
+    {
+        // TODO: Implement getVisibility() method.
+    }
+
+    /**
+     * is triggered when invoking inaccessible methods in an object context.
+     *
+     * @param $name      string
+     * @param $arguments array
+     *
+     * @return mixed
+     * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     */
+    function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
     }
 }

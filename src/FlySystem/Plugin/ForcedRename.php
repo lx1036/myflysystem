@@ -1,8 +1,8 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Plugin;
+namespace RightCapital\FlySystem\Plugin;
 
-use RightCapital\FlySystem\FlySystem\Exception\FileNotFoundException;
+use RightCapital\FlySystem\Exception\FileNotFoundException;
 
 class ForcedRename extends AbstractPlugin
 {

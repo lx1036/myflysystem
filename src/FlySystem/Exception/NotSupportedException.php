@@ -1,6 +1,6 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Exception;
+namespace RightCapital\FlySystem\Exception;
 
 use SplFileInfo;
 

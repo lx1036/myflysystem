@@ -11,12 +11,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "RightCapital\\Flysystem\\": "src/"
+      "RightCapital\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RightCapital\\Flysystem\\Test\\": "tests/"
+      "RightCapital\\Test\\": "tests/"
     }
   },
   "require-dev": {

@@ -6,10 +6,10 @@
  * Time: 12:49 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Cache;
+namespace RightCapital\FlySystem\Cache;
 
-use RightCapital\FlySystem\FlySystem\CacheInterface;
-use RightCapital\FlySystem\FlySystem\Util;
+use RightCapital\FlySystem\CacheInterface;
+use RightCapital\FlySystem\Util;
 
 abstract class AbstractCache implements CacheInterface
 {

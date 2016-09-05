@@ -1,8 +1,8 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Plugin;
+namespace RightCapital\FlySystem\Plugin;
 
-use RightCapital\FlySystem\FlySystem\FilesystemInterface;
+use RightCapital\FlySystem\FilesystemInterface;
 
 abstract class AbstractPlugin implements PluginInterface
 {
@@ -14,7 +14,7 @@ abstract class AbstractPlugin implements PluginInterface
     /**
      * Set the filesystem
      *
-     * @param \RightCapital\FlySystem\FlySystem\FilesystemInterface $filesystem
+     * @param \RightCapital\FlySystem\FilesystemInterface $filesystem
      */
     public function setFilesystem(FilesystemInterface $filesystem)
     {

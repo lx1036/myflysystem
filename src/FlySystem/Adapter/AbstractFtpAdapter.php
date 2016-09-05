@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/4/16
- * Time: 9:50 PM
- */
 
-namespace RightCapital\FlySystem\FlySystem\Adapter;
+namespace RightCapital\FlySystem\Adapter;
 
 abstract class AbstractFtpAdapter extends AbstractAdapter
 {
@@ -130,6 +124,8 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
 
     /**
      * @param string $host
+     *
+     * @return $this
      */
     public function setHost($host)
     {
@@ -151,7 +147,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
     /**
      * Set the ftp port
      *
-     * @param int|\RightCapital\FlySystem\FlySystem\Adapter\int $port
+     * @param int|\RightCapital\FlySystem\Adapter\int $port
      *
      * @return $this
      */
@@ -213,7 +209,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
     }
 
     /**
-     * @param int|\RightCapital\FlySystem\FlySystem\Adapter\int $timeout
+     * @param int|\RightCapital\FlySystem\Adapter\int $timeout
      *
      * @return $this
      */

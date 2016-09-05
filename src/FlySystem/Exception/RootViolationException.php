@@ -6,7 +6,7 @@
  * Time: 11:23 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Exception;
+namespace RightCapital\FlySystem\Exception;
 
 class RootViolationException extends \LogicException
 {

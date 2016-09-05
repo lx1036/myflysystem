@@ -6,14 +6,14 @@
  * Time: 11:47 AM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
 interface ReadInterface
 {
     /**
      * Check if the file exists.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|bool|null
      */
@@ -22,7 +22,7 @@ interface ReadInterface
     /**
      * Read a file.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|false
      */
@@ -31,7 +31,7 @@ interface ReadInterface
     /**
      * Read a file as a stream.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|false
      */
@@ -68,7 +68,7 @@ interface ReadInterface
     /**
      * Get the mimetype of a file.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return mixed
      */
@@ -77,7 +77,7 @@ interface ReadInterface
     /**
      * Get the timestamp of a file.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return mixed
      */
@@ -86,7 +86,7 @@ interface ReadInterface
     /**
      * Get the visibility of a file.
      *
-     * @param \RightCapital\FlySystem\FlySystem\string $path
+     * @param \RightCapital\FlySystem\string $path
      *
      * @return array|false
      */

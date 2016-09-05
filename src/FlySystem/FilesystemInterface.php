@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/4/16
- * Time: 11:17 PM
- */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
-use RightCapital\FlySystem\FlySystem\Handler\Handler;
-use RightCapital\FlySystem\FlySystem\Plugin\PluginInterface;
+use RightCapital\FlySystem\Handler\Handler;
+use RightCapital\FlySystem\Plugin\PluginInterface;
 
 interface FilesystemInterface
 {

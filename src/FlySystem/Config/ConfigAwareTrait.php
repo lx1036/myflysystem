@@ -1,8 +1,8 @@
 <?php
 
-namespace RightCapital\FlySystem\FlySystem\Config;
+namespace RightCapital\FlySystem\Config;
 
-use RightCapital\FlySystem\FlySystem\Util;
+use RightCapital\FlySystem\Support\Util;
 
 trait ConfigAwareTrait
 {
@@ -12,6 +12,8 @@ trait ConfigAwareTrait
     protected $config;
 
     /**
+     * Get the field config.
+     * 
      * @return Config
      */
     public function getConfig()
@@ -20,6 +22,8 @@ trait ConfigAwareTrait
     }
 
     /**
+     * Set the field config.
+     * 
      * @param $config
      */
     protected function setConfig($config)
