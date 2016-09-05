@@ -8,7 +8,7 @@
 
 namespace RightCapital\FlySystem\FlySystem\Exception;
 
-class RootViolationException
+class RootViolationException extends \LogicException
 {
 
 }

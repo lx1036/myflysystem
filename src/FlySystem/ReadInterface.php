@@ -17,7 +17,7 @@ interface ReadInterface
      *
      * @return array|bool|null
      */
-    public function has(string $path);
+    public function has($path);
 
     /**
      * Read a file.
@@ -26,7 +26,7 @@ interface ReadInterface
      *
      * @return array|false
      */
-    public function read(string $path);
+    public function read($path);
 
     /**
      * Read a file as a stream.
@@ -35,7 +35,7 @@ interface ReadInterface
      *
      * @return array|false
      */
-    public function readStream(string $path);
+    public function readStream($path);
 
     /**
      * List contents of a directory.
@@ -54,7 +54,7 @@ interface ReadInterface
      *
      * @return array|false
      */
-    public function getMetadata(string $path);
+    public function getMetadata($path);
 
     /**
      * Get the file size.
@@ -63,7 +63,7 @@ interface ReadInterface
      *
      * @return int
      */
-    public function getSize(string $path);
+    public function getSize($path);
 
     /**
      * Get the mimetype of a file.
@@ -72,7 +72,7 @@ interface ReadInterface
      *
      * @return mixed
      */
-    public function getMimetype(string $path);
+    public function getMimetype($path);
 
     /**
      * Get the timestamp of a file.
@@ -81,7 +81,7 @@ interface ReadInterface
      *
      * @return mixed
      */
-    public function getTimestamp(string $path);
+    public function getTimestamp($path);
 
     /**
      * Get the visibility of a file.
@@ -90,5 +90,5 @@ interface ReadInterface
      *
      * @return array|false
      */
-    public function getVisibility(string $path);
+    public function getVisibility($path);
 }

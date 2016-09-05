@@ -8,14 +8,26 @@
 
 namespace RightCapital\FlySystem\FlySystem;
 
+use RightCapital\FlySystem\FlySystem\Config\Config;
+
 interface AdapterInterface extends ReadInterface
 {
     /**
+     * @const  VISIBILITY_PUBLIC  public visibility
+     */
+    const VISIBILITY_PUBLIC = 'public';
+
+    /**
+     * @const  VISIBILITY_PRIVATE  private visibility
+     */
+    const VISIBILITY_PRIVATE = 'private';
+
+    /**
      * Write a new file.
      *
-     * @param                                          $path
-     * @param                                          $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config $config
+     * @param                                                 $path
+     * @param                                                 $contents
+     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
      *
      * @return array|false
      */
@@ -24,9 +36,9 @@ interface AdapterInterface extends ReadInterface
     /**
      * Write a new file using stream.
      *
-     * @param                                          $path
-     * @param                                          $resource
-     * @param \RightCapital\FlySystem\FlySystem\Config $config
+     * @param                                                                                          $path
+     * @param                                                                                          $resource
+     * @param \RightCapital\FlySystem\FlySystem\Config\Config                                          $config
      *
      * @return array|false
      */
@@ -35,9 +47,9 @@ interface AdapterInterface extends ReadInterface
     /**
      * Update a file.
      *
-     * @param                                          $path
-     * @param                                          $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config $config
+     * @param                                                 $path
+     * @param                                                 $contents
+     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
      *
      * @return array|false
      */
@@ -46,9 +58,9 @@ interface AdapterInterface extends ReadInterface
     /**
      * Update a file using stream.
      *
-     * @param                                          $path
-     * @param                                          $contents
-     * @param \RightCapital\FlySystem\FlySystem\Config $config
+     * @param                                                 $path
+     * @param                                                 $contents
+     * @param \RightCapital\FlySystem\FlySystem\Config\Config $config
      *
      * @return array|false
      */

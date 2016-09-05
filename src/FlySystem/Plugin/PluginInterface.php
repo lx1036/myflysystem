@@ -19,4 +19,11 @@ interface PluginInterface
      *
      */
     public function setFilesystem(FilesystemInterface $filesystem);
+
+    /**
+     * Get the method name
+     *
+     * @return string
+     */
+    public function getMethod();
 }

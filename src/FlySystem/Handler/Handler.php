@@ -1,19 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/1/16
- * Time: 11:50 AM
- */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\FlySystem\Handler;
+
+use RightCapital\FlySystem\FlySystem\Filesystem;
 
 abstract class Handler
 {
     /**
      * @var \RightCapital\FlySystem\FlySystem\Filesystem
      */
-    private $fileSystem;
+    private $filesystem;
+    /**
+     * @var string
+     */
     private $path;
 
     /**
@@ -44,4 +43,37 @@ abstract class Handler
 
         return $metadata['type'];
     }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return \RightCapital\FlySystem\FlySystem\Filesystem
+     */
+    public function getFilesystem(): Filesystem
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param \RightCapital\FlySystem\FlySystem\Filesystem $filesystem
+     */
+    public function setFilesystem(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
 }

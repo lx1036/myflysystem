@@ -6,7 +6,7 @@
  * Time: 12:47 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\FlySystem\Handler;
 
 class Directory extends Handler
 {

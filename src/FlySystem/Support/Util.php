@@ -8,6 +8,8 @@
 
 namespace RightCapital\FlySystem\FlySystem;
 
+use RightCapital\FlySystem\FlySystem\Config\Config;
+
 class Util
 {
 
@@ -20,13 +22,6 @@ class Util
         }
 
         return $pathinfo;
-    }
-
-    public static function contentMimetype($contents)
-    {
-        $finfo = new Finfo(FILEINFO_MIME_TYPE);
-
-        return $finfo->buffer($contents);
     }
 
     public static function normalizePrefix($realpath, $separator)
@@ -47,5 +42,88 @@ class Util
         }
 
         return $result;
+    }
+
+    public static function ensureConfig($config)
+    {
+        if ($config === null) {
+            return new Config();
+        }
+
+        if ($config instanceof Config) {
+            return $config;
+        }
+
+        if (is_array($config)) {
+            return new Config($config);
+        }
+
+        throw new \LogicException('A config should either be an array or a Config object.');
+    }
+
+    /**
+     * Normalize path.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public static function normalizePath($path)
+    {
+        // Remove any kind of funky unicode whitespace
+        $normalized = preg_replace('#\p{C}+|^\./#u', '', $path);
+        $normalized = static::normalizeRelativePath($normalized);
+
+        if (preg_match('#/\.{2}|^\.{2}/|^\.{2}$#', $normalized)) {
+            throw new \LogicException(
+                'Path is outside of the defined root, path: [' . $path . '], resolved: [' . $normalized . ']'
+            );
+        }
+
+        $normalized = preg_replace('#\\\{2,}#', '\\', trim($normalized, '\\'));
+        $normalized = preg_replace('#/{2,}#', '/', trim($normalized, '/'));
+
+        return $normalized;
+    }
+
+    /**
+     * Normalize relative directories in a path.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    private static function normalizeRelativePath($path)
+    {
+        // Path remove self referring paths ("/./").
+        $path = preg_replace('#/\.(?=/)|^\./|(/|^)\./?$#', '', $path);
+
+        // Regex for resolving relative paths
+        $regex = '#/*[^/\.]+/\.\.#Uu';
+
+        while (preg_match($regex, $path)) {
+            $path = preg_replace($regex, '', $path);
+        }
+
+        return $path;
+    }
+
+    public static function rewindStream($resource)
+    {
+        if (ftell($resource) !== 0 && static::isSeekableStream($resource)) {
+            rewind($resource);
+        }
+    }
+
+    public static function isSeekableStream($resource)
+    {
+        $metadata = stream_get_meta_data($resource);
+
+        //seekable (bool) - 是否可以在当前流中定位
+        return $metadata['seekable'];
+    }
+
+    public static function guessMimeType($path, $contents)
+    {
     }
 }

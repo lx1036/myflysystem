@@ -8,6 +8,7 @@
 
 namespace RightCapital\FlySystem\FlySystem;
 
+use RightCapital\FlySystem\FlySystem\Handler\Handler;
 use RightCapital\FlySystem\FlySystem\Plugin\PluginInterface;
 
 interface FilesystemInterface
