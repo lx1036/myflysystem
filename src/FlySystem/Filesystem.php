@@ -69,6 +69,18 @@ class Filesystem implements FilesystemInterface
         return (bool) $this->getAdapter()->write($path, $contents, $config);
     }
 
+    /**
+     * Write a new file using a stream.
+     *
+     * @param string   $path     The path of the new file.
+     * @param resource $resource The file handle.
+     * @param array    $config   An optional configuration array.
+     *
+     * @throws InvalidArgumentException If $resource is not a file handle.
+     * @throws FileExistsException
+     *
+     * @return bool True on success, false on failure.
+     */
     public function writeStream($path, $resource, array $config = [])
     {
         if (!is_resource($resource)) {
@@ -156,12 +168,61 @@ class Filesystem implements FilesystemInterface
         return (bool) $this->getAdapter()->writeStream($path, $resource, $config);
     }
 
+    /**
+     * Read and delete a file
+     *
+     * @param string $path
+     *
+     * @return bool|false|string
+     */
+    public function readAndDelete($path)
+    {
+        $path = Util::normalizePath($path);
+        $this->assertPresent($path);
+
+        if (($contents = $this->read($path)) === false) {
+            return false;
+        }
+
+        $this->delete($path);
+
+        return $contents;
+    }
+
+    /**
+     * Read a file.
+     *
+     * @param string $path The path to the file.
+     *
+     * @throws Exception\FileNotFoundException
+     *
+     * @return string|false The file contents or false on failure.
+     */
     public function read($path)
     {
         $path = Util::normalizePath($path);
         $this->assertPresent($path);
 
-        if (!$object = $this->getAdapter()->readStream($path)) {
+        if (!($object = $this->getAdapter()->read($path))) {
+            return false;
+        }
+
+        return $object['contents'];
+    }
+
+    /**
+     * Read a file using stream.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function readStream($path)
+    {
+        $path = Util::normalizePath($path);
+        $this->assertPresent($path);
+
+        if (!($object = $this->getAdapter()->readStream($path))) {
             return false;
         }
 
@@ -196,6 +257,13 @@ class Filesystem implements FilesystemInterface
         return $this->getAdapter()->delete($path);
     }
 
+    /**
+     * Delete a dir.
+     *
+     * @param string $dirname
+     *
+     * @return bool
+     */
     public function deleteDir($dirname)
     {
         $dirname = Util::normalizePath($dirname);
@@ -207,6 +275,14 @@ class Filesystem implements FilesystemInterface
         return (bool) $this->adapter->deleteDir($dirname);
     }
 
+    /**
+     * Create a dir.
+     *
+     * @param string $dirname
+     * @param array  $config
+     *
+     * @return bool
+     */
     public function createDir($dirname, array $config = [])
     {
         $dirname = Util::normalizePath($dirname);
@@ -215,14 +291,11 @@ class Filesystem implements FilesystemInterface
         return (bool) $this->getAdapter()->createDir($dirname, $config);
     }
 
-    public function listContents($directory = '', $recursive = false)
-    {
-        $directory = Util::normalizePath($directory);
-        $contents  = $this->getAdapter()->listContents($directory, $recursive);
-
-        return (new ContentListingFormatter($directory, $recursive))->formatListing($contents);
-    }
-
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
     public function getMimetype($path)
     {
         $path = Util::normalizePath($path);
@@ -241,46 +314,6 @@ class Filesystem implements FilesystemInterface
         $this->assertPresent($path);
 
         return $this->getAdapter()->getMetadata($path);
-    }
-
-    /**
-     * Assert a file is present
-     *
-     * @param string $path path to file
-     *
-     * @throws FileNotFoundException
-     */
-    private function assertPresent($path)
-    {
-        if ($this->config->get('disable_asserts', false) === false && !$this->has($path)) {
-            throw new FileNotFoundException($path);
-        }
-    }
-
-    /**
-     * Assert a file is absent
-     *
-     * @param string $path path to file
-     *
-     * @throws FileExistsException
-     */
-    private function assertAbsent($path)
-    {
-        if ($this->config->get('disable_asserts', false) === false && $this->has($path)) {
-            throw new FileExistsException($path);
-        }
-    }
-
-    public function readStream($path)
-    {
-        $path = Util::normalizePath($path);
-        $this->assertPresent($path);
-
-        if (!$object = $this->getAdapter()->readStream($path)) {
-            return false;
-        }
-
-        return $object['stream'];
     }
 
     public function getSize($path)
@@ -318,26 +351,47 @@ class Filesystem implements FilesystemInterface
         return $object['visibility'];
     }
 
+    /**
+     * Assert a file is present
+     *
+     * @param string $path path to file
+     *
+     * @throws FileNotFoundException
+     */
+    private function assertPresent($path)
+    {
+        if ($this->config->get('disable_asserts', false) === false && !$this->has($path)) {
+            throw new FileNotFoundException($path);
+        }
+    }
+
+    /**
+     * Assert a file is absent
+     *
+     * @param string $path path to file
+     *
+     * @throws FileExistsException
+     */
+    private function assertAbsent($path)
+    {
+        if ($this->config->get('disable_asserts', false) === false && $this->has($path)) {
+            throw new FileExistsException($path);
+        }
+    }
+
+    /**
+     * Set the visibility.
+     *
+     * @param string $path
+     * @param string $visibility
+     *
+     * @return bool
+     */
     public function setVisibility($path, $visibility)
     {
         $path = Util::normalizePath($path);
 
         return (bool) $this->getAdapter()->setVisibility($path, $visibility);
-    }
-
-    public function readAndDelete($path)
-    {
-        $path = Util::normalizePath($path);
-        $this->assertPresent($path);
-        $contents = $this->read($path);
-
-        if ($contents === false) {
-            return false;
-        }
-
-        $this->delete($path);
-
-        return $contents;
     }
 
     public function get($path, Handler $handler = null)
@@ -353,5 +407,21 @@ class Filesystem implements FilesystemInterface
         $handler->setFilesystem($this);
 
         return $handler;
+    }
+
+    /**
+     * List dir content.
+     *
+     * @param string $directory
+     * @param bool   $recursive
+     *
+     * @return array
+     */
+    public function listContents($directory = '', $recursive = false)
+    {
+        $directory = Util::normalizePath($directory);
+        $contents  = $this->getAdapter()->listContents($directory, $recursive);
+
+        return (new ContentListingFormatter($directory, $recursive))->formatListing($contents);
     }
 }

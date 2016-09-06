@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuxiang
- * Date: 9/4/16
- * Time: 11:03 PM
- */
 
 namespace RightCapital\FlySystem\Config;
 
@@ -19,13 +13,18 @@ class Config
      */
     protected $fallback;
 
+    /**
+     * Config constructor.
+     *
+     * @param array $settings
+     */
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
     }
 
     /**
-     * Set the fallback.
+     * Set the fallback to "Update" the config.
      *
      * @param \RightCapital\FlySystem\Config\Config $fallback
      *
@@ -53,6 +52,13 @@ class Config
         return $this;
     }
 
+    /**
+     * Get the value from the settings attribute.
+     * @param      $key
+     * @param null $default
+     *
+     * @return mixed
+     */
     public function get($key, $default = null)
     {
         if (!array_key_exists($key, $this->settings)) {
@@ -62,6 +68,12 @@ class Config
         return $this->settings[$key];
     }
 
+    /**
+     * @param $key
+     * @param $default
+     *
+     * @return mixed
+     */
     protected function getDefault($key, $default)
     {
         if (!$this->fallback) {
@@ -69,5 +81,17 @@ class Config
         }
 
         return $this->fallback->get($key, $default);
+    }
+
+    /**
+     * Check the key if exists in the settings attribute.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->settings);
     }
 }

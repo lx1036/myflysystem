@@ -70,7 +70,7 @@ interface ReadInterface
      *
      * @param \RightCapital\FlySystem\string $path
      *
-     * @return mixed
+     * @return array|false
      */
     public function getMimetype($path);
 
@@ -79,7 +79,7 @@ interface ReadInterface
      *
      * @param \RightCapital\FlySystem\string $path
      *
-     * @return mixed
+     * @return array|false
      */
     public function getTimestamp($path);
 

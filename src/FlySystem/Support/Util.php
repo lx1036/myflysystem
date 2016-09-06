@@ -127,4 +127,28 @@ class Util
     public static function guessMimeType($path, $contents)
     {
     }
+
+    /**
+     * Get a normalized dirname from a path.
+     *
+     * @param string $path
+     *
+     * @return string dirname
+     */
+    public static function dirname($path)
+    {
+        return static::normalizeDirname(dirname($path));
+    }
+
+    /**
+     * Normalize a dirname return value.
+     *
+     * @param string $dirname
+     *
+     * @return string normalized dirname
+     */
+    public static function normalizeDirname($dirname)
+    {
+        return $dirname === '.' ? '' : $dirname;
+    }
 }

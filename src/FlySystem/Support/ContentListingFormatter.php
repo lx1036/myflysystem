@@ -15,7 +15,7 @@ class ContentListingFormatter
 
     public function formatListing(array $listing)
     {
-        $listing = array_values(array_map([$this, 'addPathInfo'], array_filter($listing, 'isEntryOutOfScope')));
+        $listing = array_values(array_map([$this, 'addPathInfo'], array_filter($listing, [$this, 'isEntryOutOfScope'])));
 
         return $this->sortListing($listing);
     }
@@ -27,5 +27,58 @@ class ContentListingFormatter
         });
 
         return $listing;
+    }
+
+    /**
+     * Determine if the entry is out of scope.
+     *
+     * @param array $entry
+     *
+     * @return bool
+     */
+    public function isEntryOutOfScope(array $entry)
+    {
+        if (empty($entry['path']) && $entry['path'] !== '0') {
+            return false;
+        }
+
+        if ($this->recursive) {
+            return $this->residesInDirectory($entry);
+        }
+
+        return $this->isDirectChild($entry);
+    }
+
+    /**
+     * Check if the entry resides within the parent directory.
+     *
+     * @param $entry
+     *
+     * @return bool
+     */
+    private function residesInDirectory(array $entry)
+    {
+        if ($this->directory === '') {
+            return true;
+        }
+
+        return strpos($entry['path'], $this->directory . '/') === 0;
+    }
+
+    /**
+     * Check if the entry is a direct child of the directory.
+     *
+     * @param $entry
+     *
+     * @return bool
+     */
+    private function isDirectChild(array $entry)
+    {
+        return Util::dirname($entry['path']) === $this->directory;
+    }
+
+    protected function addPathInfo(array $entry)
+    {
+        return $entry + Util::pathinfo($entry['path']);
     }
 }

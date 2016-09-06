@@ -2,10 +2,17 @@
 
 namespace RightCapital\FlySystem\Test;
 
+use BadMethodCallException;
 use Prophecy\Argument;
 use RightCapital\FlySystem\Adapter\AdapterInterface;
 use RightCapital\FlySystem\Config\Config;
+use RightCapital\FlySystem\Exception\FileExistsException;
+use RightCapital\FlySystem\Exception\FileNotFoundException;
+use RightCapital\FlySystem\Exception\RootViolationException;
 use RightCapital\FlySystem\Filesystem;
+use RightCapital\FlySystem\Handler\Directory;
+use RightCapital\FlySystem\Handler\File;
+use RightCapital\FlySystem\Support\Util;
 
 class FilesystemTests extends \PHPUnit_Framework_TestCase
 {
@@ -148,5 +155,311 @@ class FilesystemTests extends \PHPUnit_Framework_TestCase
         $this->prophecy->updateStream($path, $stream, $this->config)->willReturn(compact('path'));
         $this->assertTrue($this->filesystem->putStream($path, $stream));
         fclose($stream);
+    }
+
+    public function testPutStreamInvalid()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->filesystem->putStream('path.txt', '__INVALID__');
+    }
+
+    public function testWriteStreamInvalid()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->filesystem->writeStream('path.txt', '__INVALID__');
+    }
+
+    public function testUpdateStreamInvalid()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->filesystem->updateStream('path.txt', '__INVALID__');
+    }
+
+    public function testReadAndDelete()
+    {
+        $path   = 'path.txt';
+        $output = '__CONTENTS__';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->read($path)->willReturn(['contents' => $output]);
+        $this->prophecy->delete($path)->willReturn(true);
+        $response = $this->filesystem->readAndDelete($path);
+        $this->assertEquals($output, $response);
+    }
+
+    public function testReadAndDeleteFailedRead()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->read($path)->willReturn(false);
+        $response = $this->filesystem->readAndDelete($path);
+        $this->assertFalse($response);
+    }
+
+    public function testRead()
+    {
+        $path   = 'path.txt';
+        $output = '__CONTENTS__';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->read($path)->willReturn(['contents' => $output]);
+        $response = $this->filesystem->read($path);
+        $this->assertEquals($response, $output);
+    }
+
+    public function testReadStream()
+    {
+        $path   = 'path.txt';
+        $output = '__CONTENTS__';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->readStream($path)->willReturn(['stream' => $output]);
+        $response = $this->filesystem->readStream($path);
+        $this->assertEquals($response, $output);
+    }
+
+    public function testReadStreamFail()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->readStream($path)->willReturn(false);
+        $response = $this->filesystem->readStream($path);
+        $this->assertFalse($response);
+    }
+
+    public function testRename()
+    {
+        $old = 'old.txt';
+        $new = 'new.txt';
+        $this->prophecy->has(Argument::any())->willReturn(true, false);
+        $this->prophecy->rename($old, $new)->willReturn(true);
+        $response = $this->filesystem->rename($old, $new);
+        $this->assertTrue($response);
+    }
+
+    public function testCopy()
+    {
+        $old = 'old.txt';
+        $new = 'new.txt';
+        $this->prophecy->has(Argument::any())->willReturn(true, false);
+        $this->prophecy->copy($old, $new)->willReturn(true);
+        $response = $this->filesystem->copy($old, $new);
+        $this->assertTrue($response);
+    }
+
+    public function testCopyWithoutAsserts()
+    {
+        $old = 'old.txt';
+        $new = 'new.txt';
+        $this->filesystemConfig->set('disable_asserts', true);
+        $this->prophecy->copy($old, $new)->willReturn(true);
+        $response = $this->filesystem->copy($old, $new);
+        $this->assertTrue($response);
+    }
+
+    public function testDelete()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->delete($path)->willReturn(true);
+        $this->assertTrue($this->filesystem->delete($path));
+    }
+
+    public function testDeleteDirRootViolation()
+    {
+        $this->setExpectedException(RootViolationException::class);
+        $this->filesystem->deleteDir('');
+    }
+
+    public function testDeleteDir()
+    {
+        $this->prophecy->deleteDir('dirname')->willReturn(true);
+        $response = $this->filesystem->deleteDir('dirname');
+        $this->assertTrue($response);
+    }
+
+    public function testCreateDir()
+    {
+        $this->prophecy->createDir('dirname', $this->config)->willReturn(['path' => 'dirname', 'type' => 'dir']);
+        $output = $this->filesystem->createDir('dirname');
+        $this->assertTrue($output);
+    }
+
+    public function metaGetterProvider()
+    {
+        return [
+            ['getSize', 1234],
+            ['getVisibility', 'public'],
+            ['getMimetype', 'text/plain'],
+            ['getTimestamp', 2345],
+            ['getMetadata', [
+                'path'       => 'success.txt',
+                'size'       => 1234,
+                'visibility' => 'public',
+                'mimetype'   => 'text/plain',
+                'timestamp'  => 2345,
+            ]],
+        ];
+    }
+
+    /**
+     * @dataProvider metaGetterProvider
+     */
+    public function testMetaGetterSuccess($method, $value)
+    {
+        $path = 'success.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->{$method}($path)->willReturn([
+            'path'       => $path,
+            'size'       => 1234,
+            'visibility' => 'public',
+            'mimetype'   => 'text/plain',
+            'timestamp'  => 2345,
+        ]);
+        $output = $this->filesystem->{$method}($path);
+        $this->assertEquals($value, $output);
+    }
+
+    /**
+     * @dataProvider metaGetterProvider
+     */
+    public function testMetaGetterFails($method)
+    {
+        $path = 'success.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->{$method}($path)->willReturn(false);
+        $output = $this->filesystem->{$method}($path);
+        $this->assertFalse($output);
+    }
+
+    public function testAssertPresentThrowsException()
+    {
+        $this->setExpectedException(FileExistsException::class);
+        $this->prophecy->has('path.txt')->willReturn(true);
+        $this->filesystem->write('path.txt', 'contents');
+    }
+
+    public function testAssertAbsentThrowsException()
+    {
+        $this->setExpectedException(FileNotFoundException::class);
+        $this->prophecy->has('path.txt')->willReturn(false);
+        $this->filesystem->read('path.txt');
+    }
+
+    public function testSetVisibility()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->setVisibility($path, 'public')->willReturn(['path' => $path, 'visibility' => 'public']);
+        $output = $this->filesystem->setVisibility($path, 'public');
+        $this->assertTrue($output);
+    }
+
+    public function testSetVisibilityFail()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->setVisibility($path, 'public')->willReturn(false);
+        $output = $this->filesystem->setVisibility($path, 'public');
+        $this->assertFalse($output);
+    }
+
+    public function testGetFile()
+    {
+        $path = 'path.txt';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->getMetadata($path)->willReturn([
+            'path' => $path,
+            'type' => 'file',
+        ]);
+        $output = $this->filesystem->get($path);
+        $this->assertInstanceOf(File::class, $output);
+    }
+
+    public function testGetDirectory()
+    {
+        $path = 'path';
+        $this->prophecy->has($path)->willReturn(true);
+        $this->prophecy->getMetadata($path)->willReturn([
+            'path' => $path,
+            'type' => 'dir',
+        ]);
+        $output = $this->filesystem->get($path);
+        $this->assertInstanceOf(Directory::class, $output);
+    }
+
+    public function testListContents()
+    {
+        $rawListing = [
+            ['path' => 'other_root/file.txt'],
+            ['path' => 'valid/to_deep/file.txt'],
+            ['path' => 'valid/file.txt'],
+            ['path' => 'valid/a-valid-file.txt'],
+        ];
+
+        $expected = [
+            Util::pathinfo('valid/a-valid-file.txt'),
+            Util::pathinfo('valid/file.txt'),
+        ];
+
+        $this->prophecy->listContents('valid', false)->willReturn($rawListing);
+        $output = $this->filesystem->listContents('valid', false);
+        $this->assertEquals($expected, $output);
+    }
+
+    public function testListContentZeroName()
+    {
+        $rawListing = [
+            // files
+            ['path' => 0],
+            ['path' => '0'],
+            ['path' => ''],
+            // directories
+            ['path' => 0, 'type' => 'dir'],
+            ['path' => '0', 'type' => 'dir'],
+            ['path' => '', 'type' => 'dir'],
+        ];
+        $this->prophecy->listContents('', false)->willReturn($rawListing);
+        $output = $this->filesystem->listContents('', false);
+        $this->assertCount(2, $output);
+    }
+
+    public function testListContentsRecursize()
+    {
+        $rawListing = [
+            ['path' => 'other_root/file.txt'],
+            ['path' => 'valid/to_deep/file.txt'],
+            ['path' => 'valid/file.txt'],
+            ['path' => 'valid/a-valid-file.txt'],
+        ];
+        $expected   = [
+            Util::pathinfo('valid/a-valid-file.txt'),
+            Util::pathinfo('valid/file.txt'),
+            Util::pathinfo('valid/to_deep/file.txt'),
+        ];
+        $this->prophecy->listContents('valid', true)->willReturn($rawListing);
+        $output = $this->filesystem->listContents('valid', true);
+        $this->assertEquals($expected, $output);
+
+        $expected = [
+            Util::pathinfo('other_root/file.txt'),
+            Util::pathinfo('valid/a-valid-file.txt'),
+            Util::pathinfo('valid/file.txt'),
+            Util::pathinfo('valid/to_deep/file.txt'),
+        ];
+        $this->prophecy->listContents('', true)->willReturn($rawListing);
+        $output = $this->filesystem->listContents('', true);
+        $this->assertEquals($expected, $output);
+    }
+
+    public function testListContentsSubDirectoryMatches()
+    {
+        $rawListing = [['path' => 'a/dir/file.txt']];
+        $this->prophecy->listContents('dir', true)->willReturn($rawListing);
+        $output = $this->filesystem->listContents('dir', true);
+        $this->assertEquals([], $output);
+    }
+
+    public function testInvalidPluginCall()
+    {
+        $this->setExpectedException(BadMethodCallException::class);
+        $this->filesystem->invalidCall();
     }
 }
