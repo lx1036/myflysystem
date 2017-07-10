@@ -6,7 +6,7 @@
  * Time: 12:01 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem\Cache;
+namespace RightCapital\FlySystem\Cache;
 
 class Memory extends AbstractCache
 {

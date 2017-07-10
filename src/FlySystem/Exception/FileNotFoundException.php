@@ -6,7 +6,7 @@
  * Time: 12:33 PM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\Exception;
 
 class FileNotFoundException extends \LogicException
 {

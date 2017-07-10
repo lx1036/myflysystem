@@ -6,7 +6,7 @@
  * Time: 11:50 AM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem\Handler;
 
 class File extends Handler
 {

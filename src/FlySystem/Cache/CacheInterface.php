@@ -6,7 +6,7 @@
  * Time: 11:48 AM
  */
 
-namespace RightCapital\FlySystem\FlySystem;
+namespace RightCapital\FlySystem;
 
 interface CacheInterface extends ReadInterface
 {
